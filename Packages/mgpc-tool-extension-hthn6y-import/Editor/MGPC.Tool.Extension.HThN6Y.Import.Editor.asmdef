@@ -1,0 +1,32 @@
+{
+    "name": "MGPC.Tool.Extension.HThN6Y.Import.Editor",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Addressables",
+        "Unity.Addressables.Editor",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "Unity.VisualScripting.Core",
+        "Unity.VisualScripting.Flow",
+        "Unity.VisualScripting.State",
+        "Unity.Timeline",
+        "PoolKit",
+        "MeshAnimator",
+        "MoreMountains.Feedbacks",
+        "com.lightbug.character-controller-pro",
+        "MGPC.Game.Extension.Common",
+        "MGPC.Game.Resource",
+        "MGPC.Game.Resource.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

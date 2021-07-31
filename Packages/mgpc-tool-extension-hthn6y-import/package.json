@@ -1,0 +1,15 @@
+{
+    "name": "com.mgpc.tool.extenion.hthn6y.import",
+    "displayName": "_ MGPC Tool Extesnon HThN6Y Import",
+    "version": "0.1.0",
+    "unity": "2021.1",
+    "description": "MGPC Tool Extesnon HThN6Y Imort",
+    "keywords": [],
+    "category": "",
+    "dependencies": {},
+    "author": {
+        "email": "apprentice@giantcroissant.com",
+        "name": "ApprenticeGC",
+        "url": "https://giantcroissant.me"
+    }
+}
