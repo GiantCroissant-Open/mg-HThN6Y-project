@@ -2,3 +2,5 @@
 
 !.gitignore
 !manifest.json
+
+!mgpc-tool-extension-hthn6y-*
