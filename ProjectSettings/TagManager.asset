@@ -3,7 +3,19 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Ice
+  - Water
+  - Grass
+  - Ledge
+  - Honey
+  - Mud
+  - Boost
+  - WallSlide
+  - JumpDown
+  - ManagerRank0
+  - ManagerRank1
+  - ManagerRank2
   layers:
   - Default
   - TransparentFX
@@ -13,15 +25,15 @@ TagManager:
   - UI
   - 
   - 
+  - One Way Platform
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Hit Initiator 1
+  - Receive - Hit Initiator 1
+  - Hit Initiator 2
+  - Receive - Hit Initiator 2
+  - Hit Initiator 3
+  - Receive - Hit Initiator 3
   - 
   - 
   - 
