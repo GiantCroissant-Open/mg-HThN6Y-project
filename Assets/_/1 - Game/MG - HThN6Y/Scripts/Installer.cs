@@ -1,13 +1,22 @@
-﻿namespace MGPC.Game.HThN6Y.App
+﻿namespace MGPC.Game.Extension.Foundation
 {
     using Serilog;
     using Serilog.Sinks.Unity3D;
+    using UnityEngine;
     using Zenject;
 
     using Logger = Serilog.Core.Logger;
 
     public class Installer : MonoInstaller<Installer>
     {
+        [System.Serializable]
+        public class Settings
+        {
+            public GameObject cameraGO;
+        }
+
+        public Settings settings;
+
         private Logger _logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .MinimumLevel.Debug()
@@ -16,6 +25,9 @@
 
         public override void InstallBindings()
         {
+            // //
+            // Container.BindInterfacesAndSelfTo<Bootstrap>().AsSingle();
+
             //
             Zenject.SignalBusInstaller.Install(Container);
 
@@ -26,6 +38,9 @@
             // //
             // Container.DeclareSignal<UserSignedInSignal>();
             // Container.DeclareSignal<UserSignedOutSignal>();
+
+            //
+            Container.Bind<Settings>().FromInstance(settings).AsSingle();
 
             //
             Container.BindInterfacesAndSelfTo<Bootstrap>().AsSingle();

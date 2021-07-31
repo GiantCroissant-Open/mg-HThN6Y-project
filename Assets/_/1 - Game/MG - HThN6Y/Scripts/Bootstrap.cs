@@ -1,9 +1,10 @@
-namespace MGPC.Game.HThN6Y.App
+namespace MGPC.Game.Extension.Foundation
 {
     using System.Collections.Generic;
     using System.ComponentModel.Design;
     using System.Linq;
     using System.Threading.Tasks;
+    using Common;
     using UniRx;
     using Unity.VisualScripting;
     using UnityEngine;
@@ -20,6 +21,15 @@ namespace MGPC.Game.HThN6Y.App
         //
         private Zenject.DiContainer _diContainer;
 
+        private Zenject.SignalBus _signalBus;
+
+        private Zenject.ZenjectSceneLoader _sceneLoader;
+
+        //
+        private Serilog.ILogger _logger;
+
+        private Installer.Settings _settings;
+
         public bool ProvideExternalAsset { get; set; }
 
         private ScriptableObject _hudSettingDataAsset;
@@ -28,15 +38,34 @@ namespace MGPC.Game.HThN6Y.App
 
         private readonly List<GameObject> _canvasCollection = new List<GameObject>();
 
+        private GameObject _gameController;
+
         public Bootstrap(
-            Zenject.DiContainer diContainer)
+            Zenject.DiContainer diContainer,
+            Zenject.SignalBus signalBus,
+            Zenject.ZenjectSceneLoader sceneLoader,
+            [Zenject.Inject(Id = "App")] Serilog.ILogger logger,
+            Installer.Settings settings)
         {
             _diContainer = diContainer;
+            _signalBus = signalBus;
+            _sceneLoader = sceneLoader;
+            _logger = logger;
+            _settings = settings;
         }
 
         // private void Setup()
         public void Initialize()
         {
+            _logger
+                .ForContext(typeof(Bootstrap))
+                .ForContext("Method", nameof(Initialize))
+                .Debug($"");
+
+            //
+            _logService = new LogService(_logger);
+            _resourceService = new ResourceService();
+
             //LoadingGameController("Game Controller");
             // LoadingAsset("Hud - HThN6Y");
 
@@ -49,10 +78,51 @@ namespace MGPC.Game.HThN6Y.App
             //     {
             //
             //
-            LoadingAll();
+            // LoadingAll();
             //     })
             //     .AddTo(_compositeDisposable);
 
+            Observable.Timer(System.TimeSpan.FromSeconds(2))
+                .Subscribe(_ =>
+                {
+                    LoadGameController().ToObservable()
+                        .ObserveOnMainThread()
+                        .SubscribeOnMainThread()
+                        .Subscribe(result =>
+                        {
+                            _logger
+                                .ForContext(typeof(Bootstrap))
+                                .ForContext("Method", nameof(Initialize))
+                                .Debug($"GameController Loaded");
+                        })
+                        .AddTo(_compositeDisposable);
+                })
+                .AddTo(_compositeDisposable);
+        }
+
+        private async Task LoadGameController()
+        {
+            var asyncLoad = Addressables.LoadAssetAsync<GameObject>("Main - HThN6Y - Game Controller");
+            var prefab = await asyncLoad.Task;
+
+            if (prefab != null)
+            {
+                _gameController = _diContainer.InstantiatePrefab(prefab);
+
+                var variablesComp = _gameController.GetComponent<Variables>();
+                if (variablesComp != null)
+                {
+                    variablesComp.declarations.Set("logService", _logService);
+                    variablesComp.declarations.Set("resourceService", _resourceService);
+                    // variablesComp.declarations.Set("logService", (MGPC.Game.Extension.Common.ILogService)this);
+                    // variablesComp.declarations.Set("resourceService", (MGPC.Game.Extension.Common.IResourceService)this);
+
+                    //
+                    variablesComp.declarations.Set("camera", _settings.cameraGO);
+                }
+            }
+
+            Addressables.Release(prefab);
         }
 
         private async Task<long> Check()
@@ -91,7 +161,7 @@ namespace MGPC.Game.HThN6Y.App
                                 .SubscribeOnMainThread()
                                 .Subscribe(result =>
                                 {
-                                    Debug.Log($"result: {result}");
+                                    // Debug.Log($"result: {result}");
                                 })
                                 .AddTo(_compositeDisposable);
                         })

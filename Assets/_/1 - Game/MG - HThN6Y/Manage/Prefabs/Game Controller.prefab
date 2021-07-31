@@ -113,13 +113,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    _json: '{"declarations":{"collection":{"$content":[{"name":"defineEvent","value":{"$content":0,"$type":"UnityEngine.Object"},"$version":"A"},{"name":"manageTime","value":{"$content":1,"$type":"UnityEngine.Object"},"$version":"A"},{"name":"manageScore","value":{"$content":2,"$type":"UnityEngine.Object"},"$version":"A"},{"name":"canvas","value":null,"$version":"A"},{"name":"virtualCamera","value":null,"$version":"A"},{"name":"playerPrefab","value":{"$content":3,"$type":"UnityEngine.Object"},"$version":"A"},{"name":"canvasPrefab","value":{"$content":4,"$type":"UnityEngine.Object"},"$version":"A"},{"name":"player","value":null,"$version":"A"}],"$version":"A"},"$version":"A"}}'
+    _json: '{"declarations":{"collection":{"$content":[{"name":"defineEvent","value":{"$content":0,"$type":"UnityEngine.Object"},"$version":"A"},{"name":"manageTime","value":{"$content":1,"$type":"UnityEngine.Object"},"$version":"A"},{"name":"manageScore","value":{"$content":2,"$type":"UnityEngine.Object"},"$version":"A"},{"name":"canvas","value":null,"$version":"A"},{"name":"virtualCamera","value":null,"$version":"A"},{"name":"playerPrefab","value":{"$content":3,"$type":"UnityEngine.Object"},"$version":"A"},{"name":"canvasPrefab","value":{"$content":4,"$type":"UnityEngine.Object"},"$version":"A"},{"name":"player","value":null,"$version":"A"},{"name":"managerRank1","value":{"$content":5,"$type":"UnityEngine.Object"},"$version":"A"},{"name":"loadingCounter","value":{"$content":0,"$type":"System.Int32"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
     _objectReferences:
     - {fileID: 3234012014337596621}
     - {fileID: 4440934917467388111}
     - {fileID: 3196324048474443197}
     - {fileID: 5356984887909555024, guid: f788464c06038ca4f9ee68920546b8bb, type: 3}
     - {fileID: 9075902509871836001, guid: 07d6fbc3cd6226c4e9d12cdd7f890fda, type: 3}
+    - {fileID: 3234012014074459311}
 --- !u!114 &3234012014074459310
 MonoBehaviour:
   m_ObjectHideFlags: 0
