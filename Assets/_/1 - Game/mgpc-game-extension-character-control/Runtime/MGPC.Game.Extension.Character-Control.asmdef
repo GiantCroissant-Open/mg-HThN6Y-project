@@ -1,0 +1,30 @@
+{
+    "name": "MGPC.Game.Extension.Character-Control",
+    "rootNamespace": "",
+    "references": [
+        "UniRx",
+        "Zenject",
+        "UniTask",
+        "UniTask.Linq",
+        "Unity.InputSystem",
+        "Unity.VisualScripting.Core",
+        "Unity.VisualScripting.Flow",
+        "Unity.VisualScripting.State",
+        "com.lightbug.character-controller-pro",
+        "MGPC.Game.App.Common",
+        "MGPC.Game.Hud.Common",
+        "AstarPathfindingProject",
+        "PackageTools",
+        "Drawing",
+        "BehaviorDesigner"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

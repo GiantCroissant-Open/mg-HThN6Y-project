@@ -1,0 +1,15 @@
+{
+    "name": "com.mgpc.game.extenion.character-control",
+    "displayName": "_ MGPC Game Extesnon Character Control",
+    "version": "0.1.0",
+    "unity": "2021.1",
+    "description": "MGPC Game Extesnon Character Control",
+    "keywords": [],
+    "category": "",
+    "dependencies": {},
+    "author": {
+        "email": "apprentice@giantcroissant.com",
+        "name": "ApprenticeGC",
+        "url": "https://giantcroissant.me"
+    }
+}
