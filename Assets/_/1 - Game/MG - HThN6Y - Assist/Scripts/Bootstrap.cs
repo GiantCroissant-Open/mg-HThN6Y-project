@@ -49,22 +49,22 @@
                 .Debug($"");
 
 
-            Observable.Timer(System.TimeSpan.FromSeconds(2))
-                .Subscribe(_ =>
-                {
-                    LoadScene().ToObservable()
-                        .ObserveOnMainThread()
-                        .SubscribeOnMainThread()
-                        .Subscribe(result =>
-                        {
-                            _logger
-                                .ForContext(typeof(Bootstrap))
-                                .ForContext("Method", nameof(Initialize))
-                                .Debug($"Scene Loaded");
-                        })
-                        .AddTo(_compositeDisposable);
-                })
-                .AddTo(_compositeDisposable);
+            // Observable.Timer(System.TimeSpan.FromSeconds(2))
+            //     .Subscribe(_ =>
+            //     {
+            //         LoadScene().ToObservable()
+            //             .ObserveOnMainThread()
+            //             .SubscribeOnMainThread()
+            //             .Subscribe(result =>
+            //             {
+            //                 _logger
+            //                     .ForContext(typeof(Bootstrap))
+            //                     .ForContext("Method", nameof(Initialize))
+            //                     .Debug($"Scene Loaded");
+            //             })
+            //             .AddTo(_compositeDisposable);
+            //     })
+            //     .AddTo(_compositeDisposable);
         }
 
         private async Task LoadScene()

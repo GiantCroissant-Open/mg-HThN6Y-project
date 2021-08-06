@@ -13,23 +13,26 @@
         public class Settings
         {
             public GameObject cameraGO;
+
+            public Transform hudParent;
         }
 
         public Settings settings;
 
-        private Logger _logger = new LoggerConfiguration()
-            .Enrich.FromLogContext()
-            .MinimumLevel.Debug()
-            .WriteTo.Unity3D()
-            .CreateLogger();
+// #if !MGPC_COMPLETE_PROJECT
+//         private Logger _logger = new LoggerConfiguration()
+//             .Enrich.FromLogContext()
+//             .MinimumLevel.Debug()
+//             .WriteTo.Unity3D()
+//             .CreateLogger();
+// #endif
 
         public override void InstallBindings()
         {
-            // //
-            // Container.BindInterfacesAndSelfTo<Bootstrap>().AsSingle();
-
             //
-            Zenject.SignalBusInstaller.Install(Container);
+// #if !MGPC_COMPLETE_PROJECT
+//             Zenject.SignalBusInstaller.Install(Container);
+// #endif
 
             //
             // Container.DeclareSignal<AllModuleSetupDoneSignal>();
@@ -45,12 +48,13 @@
             //
             Container.BindInterfacesAndSelfTo<Bootstrap>().AsSingle();
 
-            //
-            Container
-                .Bind<Serilog.ILogger>()
-                .WithId("App")
-                .FromInstance(_logger)
-                .AsSingle();
+// #if !MGPC_COMPLETE_PROJECT
+//             Container
+//                 .Bind<Serilog.ILogger>()
+//                 .WithId("App")
+//                 .FromInstance(_logger)
+//                 .AsSingle();
+// #endif
         }
     }
 }

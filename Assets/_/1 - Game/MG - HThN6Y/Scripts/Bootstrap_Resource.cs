@@ -9,7 +9,7 @@
 
     public partial class Bootstrap
     {
-        private MGPC.Game.Extension.Common.ResourceService _resourceService;
+        // private MGPC.Game.Extension.Common.ResourceService _resourceService;
 
         // public void RequestToLoadPrefab(GameObject requester, string key)
         // {

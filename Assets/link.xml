@@ -1,0 +1,15 @@
+<linker>
+    <assembly fullname="MGPC.Game.Extension.Character-Control" preserve="all" />
+
+    <assembly fullname="AstarPathfindingProject" preserve="all" />
+
+    <!-- <assembly fullname="System">
+        <type fullname="System.Net.Configuration.WebRequestModuleHandler" preserve="all"/>
+        <type fullname="System.Net.HttpRequestCreator" preserve="all"/>
+        <type fullname="System.Net.FileWebRequestCreator" preserve="all"/>
+    </assembly> -->
+
+    <assembly fullname="UnityEngine.CoreModule" preserve="all" />
+    <assembly fullname="System" preserve="all" />
+    <assembly fullname="mscorlib" preserve="all" />
+</linker>

@@ -52,3 +52,235 @@ The following mentioned plugins/assets/extension/libs have to be loaded so the p
 ## Nuget
 
 - [Serilog](https://www.nuget.org/packages/Serilog/)
+
+# Addressable to CCD
+
+## Docker
+
+- [How to use httpie and jq within docker?](https://stackoverflow.com/questions/56452639/how-to-use-httpie-and-jq-within-docker)
+- [How do I set environment variables during the build in docker](https://stackoverflow.com/questions/39597925/how-do-i-set-environment-variables-during-the-build-in-docker)
+
+For some reason, can not use ucd auth login inside docker
+
+```sh
+PROJECT_ID=($(jq -r '.completeReleaseProjectId' ../../secret/project-info.json)) \
+CCD_API_KEY=($(jq -r '.ccdApiKey' ../../secret/secret.json)) \
+CCD_AUTH_KEY=($(jq -r '.ccdAuthKey' ../../secret/secret.json)) \
+CCD_BUCKET_ID=($(jq -r '.HThN6Y_assetCCDBucketId_mmRedAndroid' ../../secret/project-info.json)) \
+UNITY_ACCOUNT_NAME=($(jq -r '.unityAccountName' ../../secret/secret.json)) \
+UNITY_ACCOUNT_PASSWORD=($(jq -r '.unityAccountPassword' ../../secret/secret.json)) \
+UNITY_REMOTE_CONFIG_CONFIG_ID=($(jq -r '.completeReleseURCConfigId' ../../secret/project-info.json)) \
+  && time DOCKER_BUILDKIT=1 docker image build -t mg-hthn6y-project-sync-ccd-urc-mmred-android:latest --no-cache \
+    --build-arg PROJECT_ID="${PROJECT_ID}" \
+    --build-arg CCD_API_KEY="${CCD_API_KEY}" \
+    --build-arg CCD_AUTH_KEY="${CCD_AUTH_KEY}" \
+    --build-arg CCD_BUCKET_ID="${CCD_BUCKET_ID}" \
+    --build-arg UNITY_ACCOUNT_NAME="${UNITY_ACCOUNT_NAME}" \
+    --build-arg UNITY_ACCOUNT_PASSWORD="${UNITY_ACCOUNT_PASSWORD}" \
+    --build-arg UNITY_REMOTE_CONFIG_CONFIG_ID="${UNITY_REMOTE_CONFIG_CONFIG_ID}" \
+    --build-arg ADDRESSABLE_DATA_PATH="ServerData/mmRed/Android" \
+    --build-arg TOOLS_PATH="tools" \
+    --network host \
+    -f ./Dockerfile.sync-ccd-urc .
+
+PROJECT_ID=($(jq -r '.completeReleaseProjectId' ../../secret/project-info.json)) \
+CCD_API_KEY=($(jq -r '.ccdApiKey' ../../secret/secret.json)) \
+CCD_AUTH_KEY=($(jq -r '.ccdAuthKey' ../../secret/secret.json)) \
+CCD_BUCKET_ID=($(jq -r '.HThN6Y_assetCCDBucketId_mmRedAndroid' ../../secret/project-info.json)) \
+UNITY_ACCOUNT_NAME=($(jq -r '.unityAccountName' ../../secret/secret.json)) \
+UNITY_ACCOUNT_PASSWORD=($(jq -r '.unityAccountPassword' ../../secret/secret.json)) \
+UNITY_REMOTE_CONFIG_CONFIG_ID=($(jq -r '.completeReleseURCConfigId_mmRedAndroid' ../../secret/project-info.json)) \
+  && docker image build -t mg-hthn6y-project-sync-ccd-urc-mmred-android:latest --no-cache \
+    --build-arg PROJECT_ID="${PROJECT_ID}" \
+    --build-arg CCD_API_KEY="${CCD_API_KEY}" \
+    --build-arg CCD_AUTH_KEY="${CCD_AUTH_KEY}" \
+    --build-arg CCD_BUCKET_ID="${CCD_BUCKET_ID}" \
+    --build-arg UNITY_ACCOUNT_NAME="${UNITY_ACCOUNT_NAME}" \
+    --build-arg UNITY_ACCOUNT_PASSWORD="${UNITY_ACCOUNT_PASSWORD}" \
+    --build-arg UNITY_REMOTE_CONFIG_CONFIG_ID="${UNITY_REMOTE_CONFIG_CONFIG_ID}" \
+    --build-arg ADDRESSABLE_DATA_PATH="ServerData/mmRed/Android" \
+    --build-arg TOOLS_PATH="tools" \
+    -f ./Dockerfile.sync-ccd-urc .
+```
+
+```sh
+time DOCKER_BUILDKIT=1 docker image build -t mg-hthn6y-project-sync-ccd-urc-mmred-android:latest --no-cache \
+    -f ./Dockerfile.sync-ccd-urc .
+
+docker container run -it mg-hthn6y-project-sync-ccd-urc-mmred-android /bin/sh
+
+"${CCD_BINARY_PATH}" auth login acc3d9c0dd82a12ffc000f5b34d71ac6
+
+/tools/ucd buckets list 0b9ab990-7d6f-4bd4-bdce-1822ba218574 --apikey acc3d9c0dd82a12ffc000f5b34d71ac6
+```
+
+## To run on host
+
+### mmRed android
+
+```sh
+CCD_AUTH_KEY=($(jq -r '.ccdAuthKey' ../../secret/secret.json)) \
+CCD_BUCKET_ID=($(jq -r '.HThN6Y_assetCCDBucketId_mmRedAndroid' ../../secret/project-info.json)) \
+  && curl \
+    --header "authorization: Basic ${CCD_AUTH_KEY}" \
+    --header "content-type: application/json" \
+    --request GET \
+    --url "https://content-api.cloud.unity3d.com/api/v1/buckets/${CCD_BUCKET_ID}/entries/?per_page=100" | \
+    jq -r '[[.[] | select(.path | contains(".json"))] | sort_by(.last_modified) | reverse[]]'
+```
+
+```sh
+UNITY_ACCOUNT_NAME=($(jq -r '.unityAccountName' ../../secret/secret.json)) \
+UNITY_ACCOUNT_PASSWORD=($(jq -r '.unityAccountPassword' ../../secret/secret.json)) \
+  && curl \
+    --header "Content-Type: application/json" \
+    --request POST \
+    --data '{"username":"'"${UNITY_ACCOUNT_NAME}"'", "password": "'"${UNITY_ACCOUNT_PASSWORD}"'", "grant_type":"PASSWORD"}' \
+    https://api.unity.com/v1/core/api/login | \
+    jq -r ".access_token"
+```
+
+```sh
+# CCD ucd tool has to be given as one command as it requries manual confirm for passphrase
+CCD_BUCKET_ID=($(jq -r '.HThN6Y_assetCCDBucketId_mmRedAndroid' ../../secret/project-info.json)) \
+ADDRESSABLE_DATA_PATH="ServerData/mmRed/Android" \
+TOOLS_PATH="tools" \
+CCD_BINARY_PATH="./${TOOLS_PATH}/ucd" \
+  && "${CCD_BINARY_PATH}" config set bucket "${CCD_BUCKET_ID}" \
+  && "${CCD_BINARY_PATH}" entries sync "./${ADDRESSABLE_DATA_PATH}"
+
+# The following can be given all at once
+
+CCD_AUTH_KEY=($(jq -r '.ccdAuthKey' ../../secret/secret.json)) \
+CCD_BUCKET_ID=($(jq -r '.HThN6Y_assetCCDBucketId_mmRedAndroid' ../../secret/project-info.json)) \
+  && curl \
+    --header "authorization: Basic ${CCD_AUTH_KEY}" \
+    --header "content-type: application/json" \
+    --request POST \
+    --data '{"metadata":"", "notes": "Local update"}' \
+    --url "https://content-api.cloud.unity3d.com/api/v1/buckets/${CCD_BUCKET_ID}/releases/"
+
+CCD_AUTH_KEY=($(jq -r '.ccdAuthKey' ../../secret/secret.json)) \
+CCD_BUCKET_ID=($(jq -r '.HThN6Y_assetCCDBucketId_mmRedAndroid' ../../secret/project-info.json)) \
+export CATALOG_URL=$(curl -s \
+    --header "authorization: Basic ${CCD_AUTH_KEY}" \
+    --header "content-type: application/json" \
+    --request GET \
+    --url "https://content-api.cloud.unity3d.com/api/v1/buckets/${CCD_BUCKET_ID}/entries/?per_page=100" | \
+    jq -r '[[.[] | select(.path | contains(".json"))] | sort_by(.last_modified) | reverse[]] | .[0] | .content_link')
+
+UNITY_ACCOUNT_NAME=($(jq -r '.unityAccountName' ../../secret/secret.json)) \
+UNITY_ACCOUNT_PASSWORD=($(jq -r '.unityAccountPassword' ../../secret/secret.json)) \
+export UNITY_RMOTE_CONFIG_ACCESS_TOKEN=$(curl -s \
+    --header "Content-Type: application/json" \
+    --request POST \
+    --data '{"username":"'"${UNITY_ACCOUNT_NAME}"'", "password": "'"${UNITY_ACCOUNT_PASSWORD}"'", "grant_type":"PASSWORD"}' \
+    https://api.unity.com/v1/core/api/login | \
+    jq -r ".access_token")
+
+PROJECT_ID=($(jq -r '.completeReleaseProjectId' ../../secret/project-info.json)) \
+UNITY_REMOTE_CONFIG_CONFIG_ID=($(jq -r '.completeReleseURCConfigId_mmRedAndroid' ../../secret/project-info.json)) \
+export UNITY_REMOTE_CONFIG_CONTENT=$(curl -s \
+    --header "Authorization: Bearer ${UNITY_RMOTE_CONFIG_ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --request GET \
+    "https://remote-config-api.uca.cloud.unity3d.com/configs/${UNITY_REMOTE_CONFIG_CONFIG_ID}?projectId=${PROJECT_ID}")
+
+PROJECT_NAME="HThN6Y" \
+EXCLUDED_CONFIG_CONTENT=$(echo ${UNITY_REMOTE_CONFIG_CONTENT} | \
+  jq \
+    --arg catalogUrl "$CATALOG_URL" \
+    --arg findingKey "catalogUrl_$PROJECT_NAME" \
+    'del(.value[] | select(.key | contains($findingKey)))') \
+MODIFIED_CONTENT=$(echo ${UNITY_REMOTE_CONFIG_CONTENT} | \
+  jq \
+    --arg catalogUrl "$CATALOG_URL" \
+    --arg findingKey "catalogUrl_$PROJECT_NAME" \
+    '.value[] | select(.key | contains($findingKey)) | .value = $catalogUrl') \
+  && echo ${EXCLUDED_CONFIG_CONTENT} | \
+  jq \
+    --arg modifiedContent "$MODIFIED_CONTENT" \
+    '.value += [$modifiedContent | fromjson]' > payload.json
+
+PROJECT_ID=($(jq -r '.completeReleaseProjectId' ../../secret/project-info.json)) \
+UNITY_REMOTE_CONFIG_CONFIG_ID=($(jq -r '.completeReleseURCConfigId_mmRedAndroid' ../../secret/project-info.json)) \
+  && curl \
+    --header "Authorization: Bearer ${UNITY_RMOTE_CONFIG_ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --request PUT \
+    --data @payload.json \
+    "https://remote-config-api.uca.cloud.unity3d.com/configs/${UNITY_REMOTE_CONFIG_CONFIG_ID}?projectId=${PROJECT_ID}"
+```
+
+### mmRed win
+
+```sh
+# CCD ucd tool has to be given as one command as it requries manual confirm for passphrase
+CCD_BUCKET_ID=($(jq -r '.HThN6Y_assetCCDBucketId_mmRedWin' ../../secret/project-info.json)) \
+ADDRESSABLE_DATA_PATH="ServerData/mmRed/StandaloneWindows64"
+TOOLS_PATH="tools" \
+CCD_BINARY_PATH="./${TOOLS_PATH}/ucd" \
+  && "${CCD_BINARY_PATH}" config set bucket "${CCD_BUCKET_ID}" \
+  && "${CCD_BINARY_PATH}" entries sync "./${ADDRESSABLE_DATA_PATH}"
+
+# The following can be given all at once
+
+CCD_AUTH_KEY=($(jq -r '.ccdAuthKey' ../../secret/secret.json)) \
+CCD_BUCKET_ID=($(jq -r '.HThN6Y_assetCCDBucketId_mmRedWin' ../../secret/project-info.json)) \
+  && curl \
+    --header "authorization: Basic ${CCD_AUTH_KEY}" \
+    --header "content-type: application/json" \
+    --request POST \
+    --data '{"metadata":"", "notes": "Local update"}' \
+    --url "https://content-api.cloud.unity3d.com/api/v1/buckets/${CCD_BUCKET_ID}/releases/"
+
+CCD_AUTH_KEY=($(jq -r '.ccdAuthKey' ../../secret/secret.json)) \
+CCD_BUCKET_ID=($(jq -r '.HThN6Y_assetCCDBucketId_mmRedWin' ../../secret/project-info.json)) \
+UNITY_ACCOUNT_NAME=($(jq -r '.unityAccountName' ../../secret/secret.json)) \
+UNITY_ACCOUNT_PASSWORD=($(jq -r '.unityAccountPassword' ../../secret/secret.json)) \
+export CATALOG_URL=$(curl -s \
+    --header "authorization: Basic ${CCD_AUTH_KEY}" \
+    --header "content-type: application/json" \
+    --request GET \
+    --url "https://content-api.cloud.unity3d.com/api/v1/buckets/${CCD_BUCKET_ID}/entries/?per_page=100" | \
+    jq -r '[[.[] | select(.path | contains(".json"))] | sort_by(.last_modified) | reverse[]] | .[0] | .content_link')
+export UNITY_RMOTE_CONFIG_ACCESS_TOKEN=$(curl -s \
+    --header "Content-Type: application/json" \
+    --request POST \
+    --data '{"username":"'"${UNITY_ACCOUNT_NAME}"'", "password": "'"${UNITY_ACCOUNT_PASSWORD}"'", "grant_type":"PASSWORD"}' \
+    https://api.unity.com/v1/core/api/login | \
+    jq -r ".access_token")
+
+PROJECT_ID=($(jq -r '.completeReleaseProjectId' ../../secret/project-info.json)) \
+UNITY_REMOTE_CONFIG_CONFIG_ID=($(jq -r '.completeReleseURCConfigId_mmRedWin' ../../secret/project-info.json)) \
+export UNITY_REMOTE_CONFIG_CONTENT=$(curl -s \
+    --header "Authorization: Bearer ${UNITY_RMOTE_CONFIG_ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --request GET \
+    "https://remote-config-api.uca.cloud.unity3d.com/configs/${UNITY_REMOTE_CONFIG_CONFIG_ID}?projectId=${PROJECT_ID}")
+
+PROJECT_NAME="HThN6Y" \
+EXCLUDED_CONFIG_CONTENT=$(echo ${UNITY_REMOTE_CONFIG_CONTENT} | \
+  jq \
+    --arg catalogUrl "$CATALOG_URL" \
+    --arg findingKey "catalogUrl_$PROJECT_NAME" \
+    'del(.value[] | select(.key | contains($findingKey)))') \
+MODIFIED_CONTENT=$(echo ${UNITY_REMOTE_CONFIG_CONTENT} | \
+  jq \
+    --arg catalogUrl "$CATALOG_URL" \
+    --arg findingKey "catalogUrl_$PROJECT_NAME" \
+    '.value[] | select(.key | contains($findingKey)) | .value = $catalogUrl') \
+  && echo ${EXCLUDED_CONFIG_CONTENT} | \
+  jq \
+    --arg modifiedContent "$MODIFIED_CONTENT" \
+    '.value += [$modifiedContent | fromjson]' > payload.json
+
+PROJECT_ID=($(jq -r '.completeReleaseProjectId' ../../secret/project-info.json)) \
+UNITY_REMOTE_CONFIG_CONFIG_ID=($(jq -r '.completeReleseURCConfigId_mmRedWin' ../../secret/project-info.json)) \
+  && curl \
+    --header "Authorization: Bearer ${UNITY_RMOTE_CONFIG_ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --request PUT \
+    --data @payload.json \
+    "https://remote-config-api.uca.cloud.unity3d.com/configs/${UNITY_REMOTE_CONFIG_CONFIG_ID}?projectId=${PROJECT_ID}"
+```

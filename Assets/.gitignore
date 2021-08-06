@@ -4,6 +4,7 @@
 !*.*.meta
 
 !.gitignore
+!README.md
 
 !_
 
@@ -51,3 +52,5 @@ AddressableAssetsData/DataBuilders/**
 
 # 
 Unity.VisualScripting.Generated.meta
+
+!link.xml

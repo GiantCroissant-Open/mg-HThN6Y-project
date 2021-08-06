@@ -30,6 +30,18 @@ namespace MGPC.Game.Extension.Foundation
 
         private Installer.Settings _settings;
 
+#if false
+        private MGPC.Game.Extension.Common.IRankOneControl _rankOneControl;
+#endif
+
+        //
+        private MGPC.Game.Extension.Common.IResourceService _resourceService;
+        private MGPC.Game.Extension.Common.ICreationService _creationService;
+        private MGPC.Game.Extension.Common.ILoginInfo _loginInfo;
+        private MGPC.Game.Extension.Common.ILogService _logService;
+
+        private MGPC.Game.Resource.IResourceRepo _resourceRepo;
+
         public bool ProvideExternalAsset { get; set; }
 
         private ScriptableObject _hudSettingDataAsset;
@@ -44,14 +56,25 @@ namespace MGPC.Game.Extension.Foundation
             Zenject.DiContainer diContainer,
             Zenject.SignalBus signalBus,
             Zenject.ZenjectSceneLoader sceneLoader,
+            MGPC.Game.Resource.IResourceRepo resourceRepo,
+
             [Zenject.Inject(Id = "App")] Serilog.ILogger logger,
-            Installer.Settings settings)
+            Installer.Settings settings
+#if false
+
+            , MGPC.Game.Extension.Common.IRankOneControl rankOneControl
+#endif
+            )
         {
             _diContainer = diContainer;
             _signalBus = signalBus;
             _sceneLoader = sceneLoader;
             _logger = logger;
             _settings = settings;
+
+#if false
+            _rankOneControl = rankOneControl;
+#endif
         }
 
         // private void Setup()
@@ -63,8 +86,14 @@ namespace MGPC.Game.Extension.Foundation
                 .Debug($"");
 
             //
-            _logService = new LogService(_logger);
-            _resourceService = new ResourceService();
+            //
+            _creationService = new MGPC.Game.Extension.Common.CreationService(_diContainer);
+            // _hudService = new MGPC.Game.Extension.Common.HudService(_appHudProvider);
+            // _loginInfo = new MGPC.Game.Extension.Common.LoginInfo(_loginStatus);
+            _logService = new MGPC.Game.Extension.Common.LogService(_logger);
+            _resourceService = new MGPC.Game.Extension.Common.ResourceService(_logger, _resourceRepo, "MG");
+
+            Setup();
 
             //LoadingGameController("Game Controller");
             // LoadingAsset("Hud - HThN6Y");
@@ -82,22 +111,22 @@ namespace MGPC.Game.Extension.Foundation
             //     })
             //     .AddTo(_compositeDisposable);
 
-            Observable.Timer(System.TimeSpan.FromSeconds(2))
-                .Subscribe(_ =>
-                {
-                    LoadGameController().ToObservable()
-                        .ObserveOnMainThread()
-                        .SubscribeOnMainThread()
-                        .Subscribe(result =>
-                        {
-                            _logger
-                                .ForContext(typeof(Bootstrap))
-                                .ForContext("Method", nameof(Initialize))
-                                .Debug($"GameController Loaded");
-                        })
-                        .AddTo(_compositeDisposable);
-                })
-                .AddTo(_compositeDisposable);
+            // Observable.Timer(System.TimeSpan.FromSeconds(2))
+            //     .Subscribe(_ =>
+            //     {
+            //         LoadGameController().ToObservable()
+            //             .ObserveOnMainThread()
+            //             .SubscribeOnMainThread()
+            //             .Subscribe(result =>
+            //             {
+            //                 _logger
+            //                     .ForContext(typeof(Bootstrap))
+            //                     .ForContext("Method", nameof(Initialize))
+            //                     .Debug($"GameController Loaded");
+            //             })
+            //             .AddTo(_compositeDisposable);
+            //     })
+            //     .AddTo(_compositeDisposable);
         }
 
         private async Task LoadGameController()

@@ -72,6 +72,34 @@ MonoBehaviour:
         m_Value: ServerData/[BuildTarget]
       - m_Id: b8579de6e18760049899c775690cfd78
         m_Value: https://3d9ccfd4-ca5b-4395-8bf9-9a1ffdeffc33.client-api.unity3dusercontent.com/client_api/v1/buckets/72ff04e5-2c0f-410f-9cc4-0eb72ea182b4/release_by_badge/latest/entry_by_path/content/?path=
+    - m_InheritedParent: 
+      m_Id: 47c2ea6b7094f7c44bc0d47abb8a319f
+      m_ProfileName: mmRed - android
+      m_Values:
+      - m_Id: 30c466f6cf738104dbc00b2ef7114a44
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: 3ce1725fa77e50a47a643ada546d9a63
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: 55a64e298b8be75429ebe8343880890f
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: 5beecef8d73e8e44f9e9052cd24a3355
+        m_Value: ServerData/mmRed/[BuildTarget]
+      - m_Id: b8579de6e18760049899c775690cfd78
+        m_Value: https://356b74fa-ac03-456e-8cad-59a07e8d52a0.client-api.unity3dusercontent.com/client_api/v1/buckets/0b9ab990-7d6f-4bd4-bdce-1822ba218574/release_by_badge/latest/entry_by_path/content/?path=
+    - m_InheritedParent: 
+      m_Id: 8d71c08e5d11d4146abd7d55a0977362
+      m_ProfileName: mmRed - win
+      m_Values:
+      - m_Id: 30c466f6cf738104dbc00b2ef7114a44
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: 3ce1725fa77e50a47a643ada546d9a63
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: 55a64e298b8be75429ebe8343880890f
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: 5beecef8d73e8e44f9e9052cd24a3355
+        m_Value: ServerData/mmRed/[BuildTarget]
+      - m_Id: b8579de6e18760049899c775690cfd78
+        m_Value: https://356b74fa-ac03-456e-8cad-59a07e8d52a0.client-api.unity3dusercontent.com/client_api/v1/buckets/9d48678d-2c58-4701-8f96-733685d8ce8d/release_by_badge/latest/entry_by_path/content/?path=
     m_ProfileEntryNames:
     - m_Id: 30c466f6cf738104dbc00b2ef7114a44
       m_Name: BuildTarget
@@ -106,7 +134,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 56f9be649953aab469b0530fdeab53fa, type: 2}
   - {fileID: 11400000, guid: 7cbdd81ec76700e458b87a61fab68e64, type: 2}
   - {fileID: 11400000, guid: 93be174002f52a44ab1e74bed6b73d10, type: 2}
-  m_ActiveProfileId: 64b15f9e64f346e469dc7517ebd4b2d6
+  m_ActiveProfileId: 47c2ea6b7094f7c44bc0d47abb8a319f
   m_HostingServicesManager:
     m_HostingServiceInfos: []
     m_Settings: {fileID: 11400000}

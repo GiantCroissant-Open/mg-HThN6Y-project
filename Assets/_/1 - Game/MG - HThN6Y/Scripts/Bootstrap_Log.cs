@@ -2,7 +2,7 @@
 {
     public partial class Bootstrap
     {
-        private MGPC.Game.Extension.Common.LogService _logService;
+        // private MGPC.Game.Extension.Common.LogService _logService;
 
 
         // public void Info(string message)
